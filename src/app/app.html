@@ -1,0 +1,130 @@
+﻿<div class="page-shell">
+  <header class="hero">
+    <div class="hero__content">
+      <span class="eyebrow">ML research dashboard</span>
+      <h1>Credit Card Fraud Detection</h1>
+      <p>
+        A reproducible fraud-classification workflow using the real ULB credit-card dataset,
+        a benchmarked XGBoost model, and a Flask-based prediction API.
+      </p>
+      <div class="hero__meta">
+        <span>Dataset: 284,807 records</span>
+        <span>Target: Class (0 = legitimate, 1 = fraud)</span>
+        <span>Positive rate: 0.17%</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content-grid">
+    <section class="panel overview">
+      <h2>Project overview</h2>
+      <p>
+        This project follows the real research paper in the workspace, which compares entropy-computing
+        CVQBoost and XGBoost for financial fraud detection. The model artifact here is trained on the
+        same fraud dataset, evaluated with held-out metrics, and packaged for local inference.
+      </p>
+      <ul>
+        <li>Research objective: identify fraudulent transactions while handling severe class imbalance.</li>
+        <li>Methodology: benchmark multiple tabular classifiers and select the best model with F1-score.</li>
+        <li>Deployment: Flask API for local predictions, Angular dashboard for human interaction.</li>
+      </ul>
+    </section>
+
+    <section class="panel stats">
+      <h2>Dataset information</h2>
+      <div class="stat-grid">
+        <div><strong>Rows</strong><span>284,807</span></div>
+        <div><strong>Features</strong><span>29 numeric inputs</span></div>
+        <div><strong>Fraud</strong><span>492</span></div>
+        <div><strong>Legitimate</strong><span>284,315</span></div>
+      </div>
+      <p class="small-note">The dataset is highly imbalanced, so accuracy alone is not a reliable performance indicator.</p>
+    </section>
+
+    <section class="panel metrics">
+      <h2>Model comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>ROC-AUC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of modelMetrics">
+            <td>{{ row.model }}</td>
+            <td>{{ formatMetric(row.accuracy) }}</td>
+            <td>{{ formatMetric(row.precision) }}</td>
+            <td>{{ formatMetric(row.recall) }}</td>
+            <td>{{ formatMetric(row.f1) }}</td>
+            <td>{{ formatMetric(row.roc_auc) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel form-card">
+      <div class="section-heading">
+        <h2>Prediction form</h2>
+        <span class="status-pill">{{ apiStatus }}</span>
+      </div>
+      <form (ngSubmit)="onSubmit()" #predForm="ngForm">
+        <div class="field-grid">
+          <div class="field" *ngFor="let field of featureFields">
+            <label [for]="field.name">{{ field.label }}</label>
+            <input
+              [id]="field.name"
+              [name]="field.name"
+              type="number"
+              [min]="field.min"
+              [max]="field.max"
+              [step]="field.step"
+              required
+              [(ngModel)]="formData[field.name]"
+            />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" [disabled]="loading || !predForm.valid">
+            {{ loading ? 'Running prediction...' : 'Predict' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="feedback" *ngIf="errorMessage" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <div class="result-box" *ngIf="prediction">
+        <h3>Prediction result</h3>
+        <div class="result-row">
+          <span>Decision</span>
+          <strong>{{ prediction.label }}</strong>
+        </div>
+        <div class="result-row">
+          <span>Probability</span>
+          <strong>{{ prediction.probability !== undefined ? prediction.probability.toFixed(4) : 'n/a' }}</strong>
+        </div>
+        <div class="result-row">
+          <span>Prediction code</span>
+          <strong>{{ prediction.prediction }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel limitations">
+      <h2>Research limitations and disclaimer</h2>
+      <p>
+        This project uses the verified dataset and paper in the workspace. The public GitHub Pages site
+        displays the project dashboard and genuine evaluation results, but live local predictions require an
+        active Flask API on the machine running the backend. Public deployment of the Flask model is not
+        part of the static site, and prediction output should never be presented as if it were live on GitHub Pages.
+      </p>
+    </section>
+  </main>
+</div>

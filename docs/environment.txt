@@ -1,0 +1,10 @@
+Python: 3.14.3
+Node: v22.12.0
+npm: 10.9.0
+Git: 2.52.0.windows.1
+GitHub CLI: gh version 2.103.2
+Platform: Windows 11 / Windows Server environment
+Project root: E:\7th semester\DevOps\project lab
+Dataset file: creditcard.csv
+Research paper: 2503.11273v1 (1).pdf
+Status: repository and project scaffold initialized during the DevOps lab workflow
